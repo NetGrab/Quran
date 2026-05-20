@@ -3,37 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قورئانی پیرۆز | Modern Quran App</title>
+    <title>قورئانی پیرۆز لەگەڵ تەفسیر | Modern Quran & Tafsir</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700&family=Reem+Kufi:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700&family=Reem+Kufi:wght@500;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap');
 
         :root {
-            --bg-gradient: linear-gradient(135deg, #e0eafc, #cfdef3);
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --card-border: rgba(255, 255, 255, 0.45);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --primary: #0f766e;
-            --primary-light: rgba(20, 184, 166, 0.15);
+            --bg-gradient: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #0d9488;
+            --primary-light: rgba(13, 148, 136, 0.1);
             --gold: #b45309;
-            --shadow: 0 10px 30px 0 rgba(31, 38, 135, 0.06);
-            --blur: saturate(180%) blur(25px);
-            --dropdown-hover: rgba(15, 118, 110, 0.1);
+            --shadow: 0 10px 30px 0 rgba(15, 23, 42, 0.05);
+            --blur: saturate(180%) blur(20px);
+            --dropdown-hover: rgba(13, 148, 136, 0.08);
+            --tafsir-color: #2563eb;
         }
 
         [data-theme="dark"] {
-            --bg-gradient: linear-gradient(135deg, #0f172a, #1e1b4b);
+            --bg-gradient: linear-gradient(135deg, #020617, #0f172a);
             --card-bg: rgba(30, 41, 59, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(255, 255, 255, 0.05);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #2dd4bf;
-            --primary-light: rgba(45, 212, 191, 0.2);
+            --primary-light: rgba(45, 212, 191, 0.15);
             --gold: #fbbf24;
-            --shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.3);
-            --dropdown-hover: rgba(45, 212, 191, 0.15);
+            --shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.4);
+            --dropdown-hover: rgba(45, 212, 191, 0.12);
+            --tafsir-color: #60a5fa;
         }
 
         * {
@@ -57,10 +59,9 @@
 
         .app-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
         }
 
-        /* هێدەر */
         header {
             display: flex;
             justify-content: space-between;
@@ -93,7 +94,7 @@
             padding: 0.5rem;
         }
 
-        /* 👑 بەشی نوێی دۆپداونی مۆدێرن 👑 */
+        /* دۆپداونی مۆدێرن */
         .custom-dropdown {
             position: relative;
             width: 100%;
@@ -108,7 +109,7 @@
             backdrop-filter: var(--blur);
             -webkit-backdrop-filter: var(--blur);
             border: 1px solid var(--card-border);
-            padding: 1rem 1.5rem;
+            padding: 1.1rem 1.5rem;
             border-radius: 20px;
             cursor: pointer;
             box-shadow: var(--shadow);
@@ -151,7 +152,6 @@
             transform: translateY(0);
         }
 
-        /* بۆکسی گەڕانی ناو مینۆکە */
         .search-wrapper {
             position: sticky;
             top: 0;
@@ -166,14 +166,12 @@
             padding: 0.8rem 1.2rem;
             border-radius: 14px;
             border: 1px solid var(--card-border);
-            background: rgba(var(--text-main), 0.05);
+            background: rgba(0,0,0,0.03);
             color: var(--text-main);
             font-family: inherit;
-            font-size: 0.95rem;
             outline: none;
         }
 
-        /* ئۆپشنەکانی ناو مینۆکە */
         .dropdown-options {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -187,7 +185,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.95rem;
             transition: all 0.2s;
         }
 
@@ -200,59 +197,83 @@
         .option-num {
             font-size: 0.8rem;
             color: var(--text-muted);
-            background: rgba(0,0,0,0.05);
+            background: rgba(0,0,0,0.04);
             padding: 2px 6px;
             border-radius: 6px;
         }
 
-        /* کارتی دەقی قورئان */
-        .main-card {
+        /* بەشی پیشاندانی ئایەتەکان و تەفسیر */
+        .quran-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .bismillah-card {
             background: var(--card-bg);
             backdrop-filter: var(--blur);
             -webkit-backdrop-filter: var(--blur);
             border: 1px solid var(--card-border);
-            border-radius: 32px;
-            padding: 3rem 2rem;
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
             box-shadow: var(--shadow);
-            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .ayah-block {
+            background: var(--card-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            animation: fadeInUp 0.4s ease-out forwards;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .bismillah {
-            font-family: 'Reem Kufi', sans-serif;
-            font-size: 2.2rem;
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 2.5rem;
-        }
-
-        .quran-stream {
-            font-family: 'Reem Kufi', sans-serif;
-            font-size: 1.9rem;
-            line-height: 2.4;
-            text-align: justify;
-            text-align-last: center;
+        .arabic-text {
+            font-family: 'Noto Naskh Arabic', serif;
+            font-size: 1.75rem;
+            line-height: 2.2;
+            text-align: right;
+            word-spacing: 2px;
         }
 
         .ayah-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
-            margin: 0 10px;
+            width: 32px;
+            height: 32px;
             background: var(--primary-light);
-            border: 1px dashed var(--gold);
+            border: 1px solid var(--gold);
             color: var(--gold);
             border-radius: 50%;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            vertical-align: middle;
+            margin-right: 12px;
+        }
+
+        .kurdish-tafsir {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            text-align: right;
+            padding-right: 1rem;
+            border-right: 3px solid var(--tafsir-color);
         }
 
         .loader {
@@ -263,7 +284,6 @@
             color: var(--primary);
         }
 
-        /* ڕێکخستنی سکرۆڵباری مۆدێرن */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
@@ -286,17 +306,13 @@
                 <div class="search-wrapper">
                     <input type="text" id="searchBar" class="search-input" placeholder="بۆ ناوی سورەت بگەڕێ...">
                 </div>
-                <div class="dropdown-options" id="optionsContainer">
-                    </div>
+                <div class="dropdown-options" id="optionsContainer"></div>
             </div>
         </div>
 
-        <div id="loader" class="loader"><i class="fas fa-spinner fa-spin"></i> کەمێک چاوەڕوانبە...</div>
+        <div id="loader" class="loader"><i class="fas fa-spinner fa-spin"></i> کەمێک چاوەڕوانبە، دەق و تەفسیر باردەکرێن...</div>
 
-        <div class="main-card" id="quranCard" style="display: none;">
-            <div class="bismillah" id="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-            <div class="quran-stream" id="quranText"></div>
-        </div>
+        <div class="quran-container" id="quranContainer"></div>
     </div>
 
     <script>
@@ -307,9 +323,7 @@
         const selectedLabel = document.getElementById('selectedLabel');
         const optionsContainer = document.getElementById('optionsContainer');
         const searchBar = document.getElementById('searchBar');
-        const quranCard = document.getElementById('quranCard');
-        const quranText = document.getElementById('quranText');
-        const bismillah = document.getElementById('bismillah');
+        const quranContainer = document.getElementById('quranContainer');
         const loader = document.getElementById('loader');
 
         // دۆخی تاریک و ڕووناک
@@ -324,18 +338,16 @@
             }
         });
 
-        // کردنەوە و داخستنی مێنۆکە
         dropdownSelected.addEventListener('click', () => {
             dropdown.classList.toggle('active');
             if(dropdown.classList.contains('active')) searchBar.focus();
         });
 
-        // داخستنی مێنۆ ئەگەر لە دەرەوە کلیک کرا
         document.addEventListener('click', (e) => {
             if (!dropdown.contains(e.target)) dropdown.classList.remove('active');
         });
 
-        // هێنانی سورەتەکان لە ئینتەرنێتەوە
+        // لۆدکردنی ناوی سورەتەکان
         async function loadSurahs() {
             try {
                 const res = await fetch('https://api.alquran.cloud/v1/surah');
@@ -343,11 +355,10 @@
                 allSurahs = data.data;
                 renderOptions(allSurahs);
             } catch (err) {
-                selectedLabel.textContent = "هەڵەیەک ڕوویدا لە بارکردن";
+                selectedLabel.textContent = "کێشەیەک لە هێڵدا هەیە";
             }
         }
 
-        // دروستکردنی لیستی سورەتەکان لە ناو مێنۆ مۆدێرنەکەدا
         function renderOptions(surahs) {
             optionsContainer.innerHTML = '';
             surahs.forEach(s => {
@@ -358,51 +369,72 @@
                 item.addEventListener('click', () => {
                     selectedLabel.textContent = s.name;
                     dropdown.classList.remove('active');
-                    fetchSurahContent(s.number);
-                    
-                    // دیاریکردنی ستایلی ئەکتیڤ بۆ ئۆپشنەکە
-                    document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected');
+                    fetchSurahData(s.number);
                 });
-                
                 optionsContainer.appendChild(item);
             });
         }
 
-        // گەڕانی خێرا و فلتەرکردن
         searchBar.addEventListener('input', (e) => {
             const term = e.target.value.trim();
             const filtered = allSurahs.filter(s => s.name.includes(term) || s.number.toString() === term);
             renderOptions(filtered);
         });
 
-        // هێنانی دەقی ئایەتەکان
-        async function fetchSurahContent(num) {
+        // هێنانی ئایەت و تەفسیر لە یەک کاتدا (بەکارهێنانی دوو API جیاواز)
+        async function fetchSurahData(num) {
             loader.style.display = 'block';
-            quranCard.style.display = 'none';
+            quranContainer.innerHTML = '';
 
             try {
-                const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}`);
-                const data = await res.json();
-                let ayahs = data.data.ayahs;
-                
+                // هێنانی دەقی عەرەبی قورئان
+                const resArabic = await fetch(`https://api.alquran.cloud/v1/surah/${num}`);
+                const dataArabic = await resArabic.json();
+                let ayahsArabic = dataArabic.data.ayahs;
+
+                // هێنانی تەفسیری کوردی (تەفسیری ئاسان - ku.asan)
+                const resKurdish = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ku.asan`);
+                const dataKurdish = await resKurdish.json();
+                let ayahsKurdish = dataKurdish.data.ayahs;
+
+                loader.style.display = 'none';
+
+                // نیشاندانی بسم الله وەک کارتێکی سەربەخۆ ئەگەر سورەتی فاتیحە یان تەوبە نەبوو
                 if (num != 1 && num != 9) {
-                    bismillah.style.display = 'block';
-                    if (ayahs[0].text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
-                        ayahs[0].text = ayahs[0].text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّhِيمِ", "").trim();
+                    const bismillahCard = document.createElement('div');
+                    bismillahCard.className = 'bismillah-card';
+                    bismillahCard.textContent = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
+                    quranContainer.appendChild(bismillahCard);
+
+                    // لادانی بسم الله لە ئایەتی یەکەمی دەقە عەرەبییەکە بۆ ئەوەی دووبارە نەبێتەوە
+                    if (ayahsArabic[0].text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
+                        ayahsArabic[0].text = ayahsArabic[0].text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "").trim();
                     }
-                } else {
-                    bismillah.style.display = 'none';
                 }
 
-                quranText.innerHTML = ayahs.map(a => `${a.text} <span class="ayah-badge">${a.numberInSurah}</span>`).join(' ');
-                
-                loader.style.display = 'none';
-                quranCard.style.display = 'block';
+                // دروستکردنی بلۆکەکان (ئایەت + تەفسیر پێکەوە)
+                ayahsArabic.forEach((ayah, index) => {
+                    const ayahBlock = document.createElement('div');
+                    ayahBlock.className = 'ayah-block';
+
+                    // هێنانی دەقی کوردی هاوتا
+                    const kurdishText = ayahsKurdish[index] ? ayahsKurdish[index].text : 'تەفسیر بەردەست نییە';
+
+                    ayahBlock.innerHTML = `
+                        <div class="arabic-text">
+                            ${ayah.text} <span class="ayah-badge">${ayah.numberInSurah}</span>
+                        </div>
+                        <div class="kurdish-tafsir">
+                            ${kurdishText}
+                        </div>
+                    `;
+                    quranContainer.appendChild(ayahBlock);
+                });
 
             } catch (err) {
                 loader.style.display = 'none';
-                alert('هێڵی ئینتەرنێتەکەت تێکچووە!');
+                alert('هەڵەیەک ڕوویدا لە کاتی هێنانی زانیارییەکان. تکایە هێڵی ئینتەرنێتەکەت بپشکنە.');
+                console.error(err);
             }
         }
 
